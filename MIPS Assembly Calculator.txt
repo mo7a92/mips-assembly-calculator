@@ -1,0 +1,125 @@
+.data
+     
+     result_message: .asciiz "\n\nResult: "
+     message1: .asciiz "Enter first number: "
+     message2: .asciiz "Enter second number: "
+     message3: .asciiz "Choose Operation: + , - , * , / :    "
+     error_message: .asciiz "\n\n!!!! Wrong Operation !!!!"
+     
+.text
+
+
+     la $a0,message1
+     li $v0,4     
+     syscall
+     
+     li $v0,5
+     syscall
+     move $s0,$v0
+     
+     la $a0,message2
+     li $v0,4     
+     syscall
+     
+     li $v0,5
+     syscall
+     move $s1,$v0
+     
+     la $a0,message3
+     li $v0,4     
+     syscall
+     
+     li $v0,12
+     syscall
+     move $s2,$v0
+     
+     
+     
+     
+     
+     #############################################################
+     
+     li $s3,'+'
+     beq $s2,$s3,num_add
+     
+     li $s3,'-'
+     beq $s2,$s3,num_sub
+     
+     li $s3,'*'
+     beq $s2,$s3,num_mul
+     
+     li $s3,'/'
+     beq $s2,$s3,num_div
+     
+     
+     j error   # If no valid operation, show error message
+
+
+     #############################################################
+     
+     
+num_add:
+
+     la $a0,result_message
+     li $v0,4    
+     syscall
+     
+     add $t0, $s0, $s1  
+     move $a0, $t0      
+     li $v0, 1          
+     syscall
+     
+     j exit             
+
+num_sub:
+
+     la $a0,result_message
+     li $v0,4    
+     syscall
+     
+     sub $t0, $s0, $s1
+     move $a0, $t0
+     li $v0, 1
+     syscall
+     
+     j exit
+
+num_mul:
+
+     la $a0,result_message
+     li $v0,4    
+     syscall
+     
+     mul $t0, $s0, $s1
+     move $a0, $t0
+     li $v0, 1
+     syscall
+     
+     j exit
+
+num_div:
+
+     la $a0,result_message
+     li $v0,4    
+     syscall
+     
+     div $s0, $s1
+     mflo $t0           
+     move $a0, $t0
+     li $v0, 1
+     syscall
+     
+     j exit
+
+error:
+     
+     la $a0,error_message
+     li $v0,4
+     syscall
+     
+     j exit
+     
+exit:
+    
+     li $v0, 10         # Exit syscall
+     syscall                                                                            
